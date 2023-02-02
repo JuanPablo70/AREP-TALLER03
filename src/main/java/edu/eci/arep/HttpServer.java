@@ -48,7 +48,7 @@ public class HttpServer {
                     query = inputLine.split(" ")[1];
                     status = false;
                 }
-                System.out.println("Received: " + inputLine);
+                // System.out.println("Received: " + inputLine);
                 if (!in.ready()) {
                     break;
                 }
