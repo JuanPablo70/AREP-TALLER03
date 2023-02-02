@@ -1,5 +1,6 @@
 package edu.eci.arep;
 
+import org.json.*;
 import java.net.*;
 import java.io.*;
 import java.util.HashMap;
@@ -48,7 +49,6 @@ public class HttpServer {
                     status = false;
                 }
                 System.out.println("Received: " + inputLine);
-                //System.out.println("-------" + request + "----------");
                 if (!in.ready()) {
                     break;
                 }
@@ -62,7 +62,6 @@ public class HttpServer {
             }
 
             out.println(outputLine);
-
             out.close();
             in.close();
             clientSocket.close();
@@ -74,7 +73,6 @@ public class HttpServer {
      * Method that finds the movie the user is looking for
      * @param movieName movie's name
      * @return String information of the movie in a Json format
-     * @throws IOException
      */
     public static String searchMovie(String movieName) throws IOException {
         String movieJson = "";
@@ -114,16 +112,31 @@ public class HttpServer {
     }
 
     /**
-     * Method that displays in a json format the movie the user typed in the form
+     * Method that displays information of the movie the user typed
      * @param movie movie name
      * @return String according to the movie
      * @throws IOException
      */
     public static String htmlSimple(String movie) throws IOException {
         return "HTTP/1.1 200 OK\r\n" +
-                "Content-type: application/json\r\n" +
+                "Content-type: text/html\r\n" +
                 "\r\n" +
-                searchMovie(movie);
+                htmlTable(searchMovie(movie));
+    }
+
+    /**
+     * Method that converts a json into a html table
+     * @param movieJson data of the movie in a Json format
+     * @return html table
+     */
+    public static String htmlTable(String movieJson) throws JSONException{
+        String table = "<table>";
+        JSONObject jsonObject = new JSONObject(movieJson);
+        for (String key: jsonObject.keySet()) {
+            table += "<tr> \n <td>" + key + "</td> \n <td>" + jsonObject.get(key).toString() + "</td> </tr> \n";
+        }
+        table += "</table>";
+        return table;
     }
 
     /**
@@ -137,12 +150,12 @@ public class HttpServer {
                 "<!DOCTYPE html>\n" +
                 "<html>\n" +
                 "    <head>\n" +
-                "        <title>Form Example</title>\n" +
+                "        <title>Movie Form</title>\n" +
                 "        <meta charset=\"UTF-8\">\n" +
                 "        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
                 "    </head>\n" +
                 "    <body>\n" +
-                "        <h1>Form with GET</h1>\n" +
+                "        <h1>GET the movie you are looking for</h1>\n" +
                 "        <form action=\"/movie\">\n" +
                 "            <label for=\"name\">Name:</label><br>\n" +
                 "            <input type=\"text\" id=\"name\" name=\"name\" value=\"John\"><br><br>\n" +
@@ -162,26 +175,16 @@ public class HttpServer {
                 "                xhttp.send();\n" +
                 "            }\n" +
                 "        </script>\n" +
-                "\n" +/*
-                "        <h1>Form with POST</h1>\n" +
-                "        <form action=\"/hellopost\">\n" +
-                "            <label for=\"postname\">Name:</label><br>\n" +
-                "            <input type=\"text\" id=\"postname\" name=\"name\" value=\"John\"><br><br>\n" +
-                "            <input type=\"button\" value=\"Submit\" onclick=\"loadPostMsg(postname)\">\n" +
-                "        </form>\n" +
-                "        \n" +
-                "        <div id=\"postrespmsg\"></div>\n" +
-                "        \n" +
-                "        <script>\n" +
-                "            function loadPostMsg(name){\n" +
-                "                let url = \"/hellopost?name=\" + name.value;\n" +
                 "\n" +
-                "                fetch (url, {method: 'POST'})\n" +
-                "                    .then(x => x.text())\n" +
-                "                    .then(y => document.getElementById(\"postrespmsg\").innerHTML = y);\n" +
-                "            }\n" +
-                "        </script>\n" +*/
                 "    </body>\n" +
                 "</html>";
+    }
+
+    /**
+     * Method that returns the cache
+     * @return cache
+     */
+    public static HashMap<String, String> getCache() {
+        return cache;
     }
 }
