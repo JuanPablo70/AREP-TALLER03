@@ -5,6 +5,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * Client class that tests HttpServer functionalities
+ */
 public class Client {
 
     public static void main(String[] args) throws IOException {
