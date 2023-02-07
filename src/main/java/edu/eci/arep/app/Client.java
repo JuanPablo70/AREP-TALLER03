@@ -1,4 +1,4 @@
-package edu.eci.arep;
+package edu.eci.arep.app;
 
 import org.json.JSONObject;
 

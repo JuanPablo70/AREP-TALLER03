@@ -22,7 +22,7 @@ Para hacer uso de esta aplicación debe tener conocimientos de:
 Para ejecutar la aplicación, debera en la línea de comandos (cmd) ubicarse en la carpeta donde se clonó el proyecto y ejecutar el siguiente comando:
 
 ```
-mvn clean package exec:java -D "exec.mainClass"="edu.eci.arep.HttpServer"
+mvn clean package exec:java -D "exec.mainClass"="edu.eci.arep.app.HttpServer"
 ```
 
 Cuando se muestre en el mensaje "Listo para recibir ...", ingrese al link http://localhost:35000 y podrá realizar consultas.

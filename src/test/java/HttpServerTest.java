@@ -1,4 +1,4 @@
-import edu.eci.arep.HttpServer;
+import edu.eci.arep.app.HttpServer;
 import org.junit.Assert;
 import org.junit.Test;
 

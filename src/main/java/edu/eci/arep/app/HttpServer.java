@@ -1,21 +1,29 @@
-package edu.eci.arep;
+package edu.eci.arep.app;
 
 import org.json.*;
 import java.net.*;
 import java.io.*;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Web Server that uses an external API to find information about a specific movie
  */
 public class HttpServer {
 
+    private static HttpServer _instance = new HttpServer();
+    private Map<String, RESTService> services = new HashMap<>();
     private static final String USER_AGENT = "Mozilla/5.0";
     private static final String API_KEY = "c2d09dcc";
     private static final String GET_URL = "http://www.omdbapi.com/?t=%1$s&apikey=%2$s";
-    private static final HashMap<String, String> cache = new HashMap<>();
+    private static final Map<String, String> cache = new HashMap<>();
 
-    public static void main(String[] args) throws IOException {
+    public HttpServer(){}
+    public static HttpServer getInstance() {
+        return _instance;
+    }
+
+    public void run(String[] args) throws IOException {
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(35000);
@@ -48,15 +56,15 @@ public class HttpServer {
                     query = inputLine.split(" ")[1];
                     status = false;
                 }
-                // System.out.println("Received: " + inputLine);
+                System.out.println("Received: " + inputLine);
                 if (!in.ready()) {
                     break;
                 }
             }
 
-            if (query.startsWith("/movie")) {
-                String movieName = query.split("name=")[1];
-                outputLine = htmlSimple(movieName);
+            if (query.startsWith("/apps/")) {
+                outputLine = executeService(query.substring(5));
+                //outputLine = jsonSimple();
             } else {
                 outputLine = htmlGetForm();
             }
@@ -67,6 +75,17 @@ public class HttpServer {
             clientSocket.close();
         }
         serverSocket.close();
+    }
+
+    private String executeService(String serviceName) {
+        RESTService rs = services.get(serviceName);
+        String header = rs.getHeader();
+        String body = rs.getResponse();
+        return header + body;
+    }
+
+    public void addService(String key, RESTService service) {
+        services.put(key, service);
     }
 
     /**
@@ -184,7 +203,7 @@ public class HttpServer {
      * Method that returns the cache
      * @return cache
      */
-    public static HashMap<String, String> getCache() {
+    public static Map<String, String> getCache() {
         return cache;
     }
 }
