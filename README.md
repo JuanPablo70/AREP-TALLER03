@@ -43,7 +43,7 @@ Juan Pablo Sánchez Bermúdez
 
 ## Descripción del proyecto
 
-![](img/diseno-proyecto.png)
+![](img/diseno.png)
 
 Como se puede ver en la imagen superior, un cliente ingresa una URL con un servicio en específico, el servidor busca el servicio en disco y cuando lo encuentra, responde con el archivo del servicio asociado.
 
