@@ -1,14 +1,14 @@
 ## Escuela Colombiana de Ingeniería
-# APLICACIONES DISTRIBUIDAS (HTTP, SOCKETS, HTML, JS, MAVEN, GIT)
+# DISEÑO Y ESTRUCTURACIÓN DE APLICACIONES DISTRIBUIDAS EN INTERNET
 
-Aplicación para consultar la información de películas de cine. La aplicación recibe una frase de búsqueda del título de la película y muestra los datos de la película correspondiente en una tabla haciendo uso del API gratuito de https://www.omdbapi.com/.
+Servidor web que busca archivos html, javascript, css e imágenes desde el disco local.
 
 ## Clonación del proyecto
 
 Para descargar este proyecto, debe ejecutar el siguiente comando para descargar el proyecto:
 
 ```
-git clone https://github.com/JuanPablo70/AREP-TALLER01.git
+git clone https://github.com/JuanPablo70/AREP-TALLER02.git
 ```
 
 ### Prerrequisitos
@@ -22,20 +22,12 @@ Para hacer uso de esta aplicación debe tener conocimientos de:
 Para ejecutar la aplicación, debera en la línea de comandos (cmd) ubicarse en la carpeta donde se clonó el proyecto y ejecutar el siguiente comando:
 
 ```
-mvn clean package exec:java -D "exec.mainClass"="edu.eci.arep.app.HttpServer"
+mvn clean package exec:java -D "exec.mainClass"="edu.eci.arep.webapps.FirstApp"
 ```
 
-Cuando se muestre en el mensaje "Listo para recibir ...", ingrese al link http://localhost:35000 y podrá realizar consultas.
+Cuando se muestre en el mensaje "Listo para recibir ...", ingrese al link http://localhost:35000/apps/html y al inspeccionar la página, podrá ver en ```sources``` como el servidor llama los archivos html, js, css e img.
 
 Si ya no va a hacer uno de la aplicación, cierre la línea de comandos.
-
-## Tests unitarios
-
-Desde la línea de comandos ejecutar el siguiente comando:
-
-```
-mvn test
-```
 
 ## Construido con
 
@@ -49,27 +41,14 @@ mvn test
 
 Juan Pablo Sánchez Bermúdez
 
-## Diseño del proyecto
-
-El diseño de esta aplicación se basó en el diseño propuesto para este taller.
+## Descripción del proyecto
 
 ![](img/diseno-proyecto.png)
 
-### Client
+Como se puede ver en la imagen superior, un cliente ingresa una URL con un servicio en específico, el servidor busca el servicio en disco y cuando lo encuentra, responde con el archivo del servicio asociado.
 
-El cliente puede probar la aplicación de dos formas:
+Para esto se implementó una interfaz (RESTService) con dos métodos, uno que retorna el header del archivo y el otro que retorne el archivo del servicio que está leyendo (getHeader() y getResponse() respectivamente).
 
-+ Ejecutando la aplicación como se mencionó anteriormente desde un browser donde se invocan servicios rest de forma asíncrona desde un cliente JS.
-+ Desde un entorno de desarrollo corriendo la clase ```Client```.
+Se creó una clase para cada servicio que está disponible para este proyecto (ver imagen) que implementan RESTService, donde cada servicio tiene su respectivo ```Content-type``` y la ruta para acceder a dicho archivo.
 
-### Java Test Client
-
-Dado que hasta este momento no tengo el conocimiento para hacer pruebas concurrentes, se realizaron dos pruebas para verificar el funcionamiento de la aplicación:
-
-+ Buscar la película deseada por el usuario.
-+ Comprobar que el json de una película que fue buscada anteriormente se encuentre en el caché.
-
-### Web Server
-
-El servidor web actúa como un servidor de fachada permitiendo conectarse a una API externa mediante servicios REST (REpresentational State Transfer) para recibir peticiones por el protocolo HTTP y asi acceder a información mediante URLs.
-[Servicios REST](https://abi.gitbook.io/net-core/3.-servicios-rest/3.1-servicios-rest)
+Finalmente, desde la clase ```FirstApp``` se añaden cada uno de los servicios para que puedan ser accedidos por el usuario.
