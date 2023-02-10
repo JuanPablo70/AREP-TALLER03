@@ -29,6 +29,12 @@ Cuando se muestre en el mensaje "Listo para recibir ...", ingrese al link http:/
 
 Si ya no va a hacer uno de la aplicación, cierre la línea de comandos.
 
+## Test
+
+Se probó el correcto funcionamiento del servidor inspeccionando la página en el browser donde se puede ver cada uno de los archivos.
+
+![](img/test.png)
+
 ## Construido con
 
 + [Maven](https://maven.apache.org/) - Dependency Management
