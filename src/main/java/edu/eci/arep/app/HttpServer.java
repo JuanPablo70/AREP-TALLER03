@@ -64,7 +64,6 @@ public class HttpServer {
 
             if (query.startsWith("/apps/")) {
                 outputLine = executeService(query.substring(5));
-                //outputLine = jsonSimple();
             } else {
                 outputLine = htmlGetForm();
             }
