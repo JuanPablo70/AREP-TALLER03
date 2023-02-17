@@ -72,19 +72,14 @@ public class HttpServer {
                 if (method.equals("GET")) {
                     String path = query.substring(7);
                     String response = spark.getGetService(path);
-                    System.out.println(query);
                     if (response == null) {
-                        System.out.println(path);
                         spark.get(path, ((req, res) -> {
                             String type = path.split("\\.")[1];
-                            System.out.printf(type);
                             res.setContentType(contentType(type));
                             res.setPath(path);
                             return res.getResponse();
                         }));
-
                     }
-
                 }
                 outputLine = spark.getGetService(query.substring(7));
             } else {
