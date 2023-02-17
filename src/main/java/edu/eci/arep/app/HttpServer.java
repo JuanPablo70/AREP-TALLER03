@@ -1,5 +1,6 @@
 package edu.eci.arep.app;
 
+import edu.eci.arep.spark.Spark;
 import org.json.*;
 import java.net.*;
 import java.io.*;
@@ -24,6 +25,7 @@ public class HttpServer {
     }
 
     public void run(String[] args) throws IOException {
+        Spark spark = Spark.getInstance();
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(35000);
@@ -50,9 +52,11 @@ public class HttpServer {
             String inputLine, outputLine;
 
             boolean status = true;
+            String method = "";
             String query = "";
             while ((inputLine = in.readLine()) != null) {
                 if (status) {
+                    method = inputLine.split(" ")[0];
                     query = inputLine.split(" ")[1];
                     status = false;
                 }
@@ -64,6 +68,25 @@ public class HttpServer {
 
             if (query.startsWith("/apps/")) {
                 outputLine = executeService(query.substring(5));
+            } else if (query.startsWith("/spark/")) {
+                if (method.equals("GET")) {
+                    String path = query.substring(7);
+                    String response = spark.getGetService(path);
+                    System.out.println(query);
+                    if (response == null) {
+                        System.out.println(path);
+                        spark.get(path, ((req, res) -> {
+                            String type = path.split("\\.")[1];
+                            System.out.printf(type);
+                            res.setContentType(contentType(type));
+                            res.setPath(path);
+                            return res.getResponse();
+                        }));
+
+                    }
+
+                }
+                outputLine = spark.getGetService(query.substring(7));
             } else {
                 outputLine = htmlGetForm();
             }
@@ -74,6 +97,28 @@ public class HttpServer {
             clientSocket.close();
         }
         serverSocket.close();
+    }
+
+    private String contentType(String type) {
+        String result = "";
+        switch (type) {
+            case "html":
+                result = "text/html";
+                break;
+            case "js":
+                result = "application/javascript";
+                break;
+            case "css":
+                result = "text/css";
+                break;
+            case "png":
+                result = "image/png";
+                break;
+            case "json":
+                result = "application/json";
+                break;
+        }
+        return result;
     }
 
     private String executeService(String serviceName) {
